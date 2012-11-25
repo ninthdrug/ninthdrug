@@ -1,5 +1,11 @@
+*~
 *.class
 *.log
+*.swp
+*.swo
+
+# ant
+build/
 
 # sbt specific
 dist/*
