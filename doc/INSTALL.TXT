@@ -1,0 +1,20 @@
+
+What you need:
+ - linux server
+ - java jdk version 1.6+
+ - ant version 1.8
+ - scala version 2.9.0+
+
+Building:
+ - Extract the tar ball.
+ - Change to the ninthdrug/trunk directory.
+ - Edit the build.xml file to fit your installation. At the minimum you may
+   want to change the scala.home property to point to your scala installtion
+   and install.dir to point to where you want to install ninthdrug. 
+ - Invoke ant.
+ - Invoke ant install.
+
+Configuring:
+   The installstion creates a file name .ninthdrug in your home directory.  This
+file contains the absolute paths to configuration files.  Initially, it should contains the path to ${install.dir}/cong/ninthdrug.conf.  You may edit this file as desired.
+

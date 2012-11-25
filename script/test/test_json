@@ -1,0 +1,33 @@
+#!/bin/sh
+LIBDIR=$HOME/lib
+LIBS=
+for JAR in $LIBDIR/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -deprecation -cp $LIBS "$0" "$@"
+!#
+
+import ninthdrug.util.Json._
+
+val sl = List("abc", "def", "ghi")
+val sljson = sl.json
+assert(sljson == """["abc","def","ghi"]""")
+
+case class Person(name: String, age: Int) {
+  def json() =
+    "{" +
+    """ "name": """ + quote(name) + ", " +
+    """ "age": """ + age + " " +
+    "}"
+}
+
+val pl = List(
+  Person("Benjamin", 12),
+  Person("Skyler", 14)
+)
+
+assert(
+  pl.json ==
+  """[{ "name": "Benjamin",  "age": 12 },{ "name": "Skyler",  "age": 14 }]"""
+)

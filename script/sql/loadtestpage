@@ -1,0 +1,49 @@
+#!/bin/sh
+LIBS=""
+for JAR in /data/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec /opt/scala/bin/scala -cp $LIBS "$0" "$@"
+!#
+
+import ninthdrug.sql._
+import ninthdrug.config.Config
+
+val dburl = Config.get("ninthdrug.cms.dburl")
+val dbuser = Config.get("ninthdrug.cms.dbuser")
+val dbpass = Config.get("ninthdrug.cms.dbpassword")
+println("cms dburl: " + dburl)
+println("cms dbuser: " + dbuser)
+println("cms password: " + dbpass)
+val db = Database(dburl, dbuser, dbpass)
+
+val websiteid = db.nextInt("websites_websiteid_seq")
+val pageid = db.nextInt("pages_pageid_seq")
+val layoutid = db.nextInt("layouts_layoutid_seq")
+
+db.execute(
+  "INSERT INTO websites(websiteid, name, description, hostname, port) VALUES (?, ?, ?, ?, ?)",
+  websiteid,
+  "testcms",
+  "The it-do cmstest",
+  "localhost",
+  8181
+)
+
+db.execute(
+  "INSERT INTO pages(pageid, websiteid, url, name, description, layoutid) VALUES (?,?,?,?,?,?)",
+  pageid,
+  websiteid,
+  "http://www.cmstest.nl/index.html",
+  "index",
+  "indexpage",
+  layoutid
+)
+
+db.execute(
+  "INSERT INTO layouts(layoutid, html, csslink) VALUES (?,?,?)",
+  layoutid,
+  "<html><head><title>dit is een test</title></head><body><h1>hello!!</h1></body></html>",
+  null
+)

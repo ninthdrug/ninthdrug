@@ -1,0 +1,14 @@
+#!/bin/sh
+LIBDIR=$HOME/lib
+LIBS=
+for JAR in $LIBDIR/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -deprecation -cp $LIBS "$0" "$@"
+!#
+
+import ninthdrug.command._
+
+val cmd = new Lazarus(Exec("ls -l"), "localhost", null)
+cmd.print

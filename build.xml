@@ -1,0 +1,151 @@
+<project name="ninthdrug" basedir="." default="jar">
+  <description>Ninth Drug Library</description>
+
+  <target name="init">
+    <property file="${user.home}/build.properties"/>
+    <property name="scala.home" location="${user.home}/scala"/>
+    <property name="install.dir" location="${user.home}"/>
+    <property name="bin.dir" location="${install.dir}/bin"/>
+    <property name="cache.dir" location="${install.dir}/http/scriptcache"/>
+    <property name="conf.dir" location="${install.dir}/conf"/>
+    <property name="lib.dir" location="${install.dir}/lib"/>
+    <property name="log.dir" location="${install.dir}/log"/>
+    <echo message="install.dir: ${install.dir}"/>
+    <mkdir dir="build/classes"/>
+    <path id="build.classpath">
+      <pathelement location="${scala.home}/lib/scala-library.jar"/>
+<!--
+      <pathelement location="${scala.home}/lib/scala-actors.jar"/>
+      <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
+-->
+      <pathelement location="lib/jsoup-1.7.1.jar"/>
+      <pathelement location="lib/mail.jar"/>
+      <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
+    </path>
+    <path id="test.classpath">
+      <pathelement location="${scala.home}/lib/scala-library.jar"/>
+<!--
+      <pathelement location="${scala.home}/lib/scala-actors.jar"/>
+      <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
+-->
+      <pathelement location="lib/scalatest_2.9.0-1.8.jar"/>
+      <pathelement location="lib/mail.jar"/>
+      <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
+      <pathelement location="lib/jsoup-1.7.1.jar"/>
+      <pathelement location="build/classes"/>
+    </path>
+    <filterset id="ninthdrugfilter">
+      <filter token="BINDIR" value="${bin.dir}"/>
+      <filter token="CACHEDIR" value="${cache.dir}"/>
+      <filter token="CONFDIR" value="${conf.dir}"/>
+      <filter token="JAVA_HOME" value="${java.home}"/>
+      <filter token="LIBDIR" value="${lib.dir}"/>
+      <filter token="LOGDIR" value="${log.dir}"/>
+      <filter token="SCALA_HOME" value="${scala.home}"/>
+    </filterset>
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <pathelement location="${scala.home}/lib/scala-library.jar"/>
+        <pathelement location="${scala.home}/lib/scala-compiler.jar"/>
+<!--
+        <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
+-->
+      </classpath>
+    </taskdef>
+  </target>
+
+  <target name="compile" depends="init">
+    <scalac srcdir="src/main/scala" 
+         destdir="build/classes" 
+         classpathref="build.classpath"
+         scalacdebugging="yes"
+         unchecked="yes"
+         deprecation="yes"
+         addparams="">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="compile-test" depends="init">
+    <scalac srcdir="src/test/scala" 
+         destdir="build/classes" 
+         classpathref="test.classpath"
+         deprecation="yes">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="build/ninthdrug.jar" basedir="build/classes" />
+  </target>
+
+  <target name="check_conf">
+    <available file="${user.home}/.ninthdrug" property="dot_ninthdrug_exists"/>
+    <available file="${conf.dir}/ninthdrug.conf" property="ninthdrug_conf_exists"/>
+  </target>
+
+  <target name="copy_dot_ninthdrug" unless="dot_ninthdrug_exists">
+    <copy file="conf/dot_ninthdrug" tofile="${user.home}/.ninthdrug">
+      <filterset refid="ninthdrugfilter"/>
+    </copy>
+  </target>
+
+  <target name="copy_ninthdrug_conf" unless="ninthdrug_conf_exists">
+    <copy file="conf/ninthdrug.conf" todir="${conf.dir}">
+      <filterset refid="ninthdrugfilter"/>
+    </copy>
+  </target>
+
+  <target name="install" 
+    depends="init,check_conf,copy_dot_ninthdrug,copy_ninthdrug_conf">
+    <copy file="build/ninthdrug.jar" todir="${lib.dir}"/>
+    <copy todir="${lib.dir}">
+      <fileset dir="lib">
+        <include name="jsoup-1.7.1.jar"/>
+        <include name="mail.jar"/>
+        <include name="postgresql-9.2-1002.jdbc4.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${bin.dir}">
+      <fileset dir="script/main">
+        <include name="makeinstaller"/>
+        <exclude name="**/.svn"/>
+      </fileset>
+      <filterset refid="ninthdrugfilter"/>
+    </copy>
+
+    <chmod perm="ugo+rx">
+      <fileset dir="${bin.dir}">
+        <include name="makeinstaller"/>
+      </fileset>
+    </chmod>
+  </target>
+
+  <target name="test" depends="compile,compile-test">
+    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask" 
+      classpathref="test.classpath"/>
+  
+    <scalatest>
+      <runpath>
+        <pathelement path="test.classpath"/>
+      </runpath>
+
+      <suite classname="ninthdrug.util.Base64Suite"/> 
+      <suite classname="ninthdrug.json.JsonScannerSuite"/> 
+      <suite classname="ninthdrug.json.JsonParserSuite"/> 
+      <suite classname="ninthdrug.json.JsonDecoderSuite"/> 
+      <suite classname="ninthdrug.json.JsonEncoderSuite"/> 
+      <suite classname="ninthdrug.config.ConfigSuite"/> 
+      <suite classname="ninthdrug.http.HttpSuite"/> 
+      <suite classname="ninthdrug.util.CryptoSuite"/> 
+      <suite classname="ninthdrug.util.UtilSuite"/> 
+      <reporter type="stdout" />
+    </scalatest>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/> 
+    <delete dir="dist"/> 
+  </target>
+</project>

@@ -1,0 +1,23 @@
+#!/bin/sh
+LIBS=$HOME/http/scriptcache
+LIBDIR=$HOME/lib
+for JAR in $LIBDIR/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec /opt/scala/bin/scala -cp $LIBS "$0" "$@"
+!#
+
+import ninthdrug.http._
+
+val server = new WebServer(
+  ServerConfig(
+    "/data/ninthdrug/scriptcache",
+    List(
+      SiteConfig("localhost_8080", "localhost", 8080, "", "/data/websites/localhost_8080"),
+      SiteConfig("localhost_9090", "localhost", 9090, "", "/data/websites/localhost_9090")
+    )
+  )
+)
+
+server.run()

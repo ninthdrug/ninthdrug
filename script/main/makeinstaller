@@ -1,0 +1,66 @@
+#!/bin/sh
+LIBS=""
+for JAR in @LIBDIR@/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec @SCALA_HOME@/bin/scala -cp $LIBS "$0" "$@"
+!#
+
+import ninthdrug.command._
+import ninthdrug.command.Command._
+import java.io.File
+
+val EXTRACT = """#!/bin/bash
+EXTRACT_ONLY=0
+if [ "$1" = "--extract" ]; then
+    EXTRACT_ONLY=1
+fi
+export TMPDIR="${name}"
+mkdir -p $TMPDIR
+ARCHIVE=`awk '/^__ARCHIVE_BELOW__/ {print NR + 1; exit 0; }' $0`
+
+tail -n+$ARCHIVE $0 | tar xz -C $TMPDIR
+
+if [ $EXTRACT_ONLY -eq 1 ]; then
+    exit 0
+fi
+
+CDIR=`pwd`
+cd $TMPDIR
+./install.sh
+cd $CDIR
+rm -rf $TMPDIR
+exit 0
+
+__ARCHIVE_BELOW__
+"""
+
+def pack(src: String, dest: String) {
+  val srcFile = new File(src)
+  val destFile = new File(dest)
+  val srcPath = srcFile.getCanonicalPath
+  val destPath = destFile.getCanonicalPath
+  val name = srcPath.split("/").toList.last
+  val payload = destPath + "/" + name + ".tgz"
+  val installer = dest + "/" + name + ".bin"
+  val extract = interpolate(EXTRACT, Map("name" -> name))
+  write(installer, extract)
+  sh("tar chzf " + payload + " -C " + srcPath + " .")
+  sh("cat " + payload + " >>" + installer)
+  sh("chmod a+x " + installer)
+  sh("rm -rf " + payload)
+}
+
+def usage() {
+  println("usage: makeinstaller <package_dir> [destinaion_dir]")
+  sys.exit(-1)
+}
+
+if (args.length < 1 || args.length > 2) usage()
+
+val src = args(0)
+val dest = if (args.length == 1) "." else args(1)
+
+pack(src, dest)
+
