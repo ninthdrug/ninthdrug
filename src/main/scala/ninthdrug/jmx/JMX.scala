@@ -18,7 +18,6 @@
  */
 package ninthdrug.jmx
 
-import java.util.HashMap
 import javax.management.Attribute
 import javax.management.JMException
 import javax.management.MBeanException
@@ -32,8 +31,9 @@ import javax.management.remote.JMXConnectorFactory
 import javax.management.remote.JMXServiceURL
 import javax.naming.Context
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConversions._
 
-class JMX(serviceURL: JMXServiceURL, props: HashMap[String, java.lang.Object]) {
+class JMX(serviceURL: JMXServiceURL, props: Map[String, Any]) {
   lazy val connector = connect()
   lazy val connection = connector.getMBeanServerConnection()
   private var connected = false
@@ -117,7 +117,7 @@ class JMX(serviceURL: JMXServiceURL, props: HashMap[String, java.lang.Object]) {
   }
 
   /**
-   * Set Attribute.
+   * Set an attribute of an MBean.
    */
   def setAttribute(parent: ObjectName, name: String, value: Any): Unit = {
     val attribute = new Attribute(name, value.asInstanceOf[java.lang.Object])
@@ -125,7 +125,7 @@ class JMX(serviceURL: JMXServiceURL, props: HashMap[String, java.lang.Object]) {
   }
 
   /**
-   * Invoke a method.
+   * Invoke a method on an MBean.
    */
   def invoke[T](obj: ObjectName, method: String, params: Any*): T = {
     connection.invoke(
@@ -137,15 +137,18 @@ class JMX(serviceURL: JMXServiceURL, props: HashMap[String, java.lang.Object]) {
   }
 
   /**
-   * Retrieve java.util.Set of ObjectName matching query.
+   * Retrieve Set of ObjectName matching query.
    */
   def queryNames(
     scope: ObjectName,
     query: QueryExp
-  ): java.util.Set[ObjectName] = {
-    connection.queryNames(scope, query)
+  ): Set[ObjectName] = {
+    connection.queryNames(scope, query).toSet
   }
 
+  /**
+   * Print the attributes of an MBean.
+   */
   def printAttributes(obj: ObjectName) {
     val attributes = connection.getMBeanInfo(obj).getAttributes()
     for (a <- attributes) {
@@ -157,7 +160,7 @@ class JMX(serviceURL: JMXServiceURL, props: HashMap[String, java.lang.Object]) {
 object JMX {
   def apply(
     serviceURL: JMXServiceURL,
-    props: HashMap[String,java.lang.Object]
+    props: Map[String,Any]
   ): JMX = {
     new JMX(serviceURL, props)
   }
@@ -165,13 +168,14 @@ object JMX {
   def apply(host: String, port: Int, user: String, password: String): JMX = {
     val serviceURL = new JMXServiceURL(
       "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi")
-    val props = new java.util.HashMap[String,Object]()
-    props.put(Context.SECURITY_PRINCIPAL, user)
-    props.put(Context.SECURITY_CREDENTIALS, password)
+    val props = Map(
+      Context.SECURITY_PRINCIPAL -> user,
+      Context.SECURITY_CREDENTIALS -> password
+    )
     new JMX(serviceURL, props)
   }
 
-  def makeObjectArray(params: Any*): Array[java.lang.Object] = {
+  private def makeObjectArray(params: Any*): Array[java.lang.Object] = {
     val array = new Array[java.lang.Object](params.length)
     var i = 0
     for (param <- params) {
@@ -181,7 +185,7 @@ object JMX {
     array
   }
 
-  def makeTypeArray(params: Any*): Array[String] = {
+  private def makeTypeArray(params: Any*): Array[String] = {
     val array = new Array[String](params.length)
     var i = 0
     for (param <- params) {
