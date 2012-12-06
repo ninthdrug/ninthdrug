@@ -168,10 +168,7 @@ object JMX {
   def apply(host: String, port: Int, user: String, password: String): JMX = {
     val serviceURL = new JMXServiceURL(
       "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi")
-    val props = Map(
-      Context.SECURITY_PRINCIPAL -> user,
-      Context.SECURITY_CREDENTIALS -> password
-    )
+    val props = Map(JMXConnector.CREDENTIALS -> Array(user, password))
     new JMX(serviceURL, props)
   }
 
