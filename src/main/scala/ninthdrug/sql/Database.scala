@@ -23,6 +23,7 @@ import java.sql.Date
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.sql.SQLException
 import java.sql.Statement
 import java.sql.Timestamp
 import scala.collection.mutable.ArrayBuffer
@@ -56,7 +57,7 @@ class Database(dburl: String, user: String, password: String) {
       closeStatement(statement)
       closeConnection(connection)
     }
-    out
+    out.toSeq
   }
 
   /**
@@ -314,7 +315,7 @@ class Database(dburl: String, user: String, password: String) {
       try {
         connection.close()
       } catch {
-        case e: Exception =>
+        case e: SQLException =>
       }
     }
   }
@@ -324,7 +325,7 @@ class Database(dburl: String, user: String, password: String) {
       try {
         statement.close()
       } catch {
-        case e: Exception =>
+        case e: SQLException =>
       }
     }
   }
@@ -334,7 +335,7 @@ class Database(dburl: String, user: String, password: String) {
       try {
         resultSet.close()
       } catch {
-        case e: Exception =>
+        case e: SQLException =>
       }
     }
   }
