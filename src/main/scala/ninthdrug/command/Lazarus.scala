@@ -2,8 +2,8 @@ package ninthdrug.command
 
 import java.io._
 import ninthdrug.config.Config
-import ninthdrug.fullhostname
-import ninthdrug.shorthostname
+import ninthdrug.HOST
+import ninthdrug.HOSTNAME
 
 class Lazarus(
   val command: Command,
@@ -60,8 +60,8 @@ object Lazarus {
     if (
       host == "localhost" ||
       host == "localhost.localdomain" ||
-      host == fullhostname ||
-      host == shorthostname
+      host == HOST ||
+      host == HOSTNAME
     ) {
       command
     } else {

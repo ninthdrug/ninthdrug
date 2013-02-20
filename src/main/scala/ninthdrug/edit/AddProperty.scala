@@ -22,7 +22,7 @@ import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
 
 class AddProperty(name: String, value: String) extends Edit {
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     val buf = ListBuffer[String]()
     val pattern = name.trim + "="
     var found = false
@@ -37,7 +37,7 @@ class AddProperty(name: String, value: String) extends Edit {
     if (!found) {
       buf.append(pattern + value)
     }
-    buf.toList
+    buf.toSeq
   }
 }
 

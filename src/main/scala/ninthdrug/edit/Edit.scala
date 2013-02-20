@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 Trung Dinh
+ * Copyright 2008-2013 Trung Dinh
  *
  *  This file is part of Ninthdrug.
  *
@@ -19,14 +19,14 @@
 package ninthdrug.edit
 
 abstract class Edit extends Serializable {
-  def edit(lines: List[String]): List[String]
+  def edit(lines: Seq[String]): Seq[String]
 }
 
 object Edit {
   /**
    * Apply edits to a list of lines.
    */
-  def edit(lines: List[String], edits: Edit*): List[String] = {
+  def edit(lines: Seq[String], edits: Edit*): Seq[String] = {
     var results = lines
     for (e <- edits) {
       results = e.edit(results)

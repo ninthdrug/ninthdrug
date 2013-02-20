@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 Trung Dinh
+ * Copyright 2008-2013 Trung Dinh
  *
  *  This file is part of Ninthdrug.
  *
@@ -21,13 +21,13 @@ package ninthdrug.edit
 import scala.util.matching.Regex
 
 class ReplaceString(pattern: String, replacement: String) extends Edit {
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     lines.map { line => line.replace(pattern, replacement) }
   }
 }
 
 class ReplaceRegex(pattern: Regex, replacement: String) extends Edit {
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     lines.map { line => pattern.replaceAllIn(line, replacement) }
   }
 }

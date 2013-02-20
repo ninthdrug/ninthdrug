@@ -21,7 +21,7 @@ package ninthdrug.edit
 import scala.util.matching.Regex
 
 class ChangeProperty(name: String, value: String) extends Edit {
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     val pattern = name.trim + "="
     lines.map { line =>
       if (line.startsWith(pattern)) {

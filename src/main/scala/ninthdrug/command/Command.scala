@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 Trung Dinh
+ * Copyright 2008-2013 Trung Dinh
  *
  *  This file is part of Ninthdrug.
  *
@@ -72,7 +72,7 @@ object Command {
   /**
    * Execute a shell command and return the output as a list of string.
    */
-  def shlines(command: String): List[String] = {
+  def shlines(command: String): Seq[String] = {
     val process = Runtime.getRuntime.exec(command)
     val reader = new BufferedReader(new InputStreamReader(process.getInputStream))
     val buf = new ListBuffer[String]()
@@ -82,13 +82,13 @@ object Command {
       line = reader.readLine()
     }
     process.waitFor()
-    buf.toList
+    buf.toSeq
   }
 
   /**
    * Return a list of process ids with commands matching input pattern.
    */
-  def psgrep(pattern: String): List[Int] = {
+  def psgrep(pattern: String): Seq[Int] = {
     val pids = ListBuffer[Int]()
     val re = new Regex(pattern)
     for (line <- shlines("ps -e -o pid,command").tail) {
@@ -100,7 +100,7 @@ object Command {
         }
       }
     }
-    pids.toList
+    pids.toSeq
   }
 
   /**
@@ -129,7 +129,7 @@ object Command {
   /**
    * Read all lines from a file into a list.
    */
-  def readlines(filename: String): List[String] = {
+  def readlines(filename: String): Seq[String] = {
     val buf = ListBuffer[String]()
     val reader = new BufferedReader(new FileReader(filename))
     var line = reader.readLine()
@@ -138,7 +138,7 @@ object Command {
       line = reader.readLine()
     }
     reader.close()
-    buf.toList
+    buf.toSeq
   }
 
   /**
@@ -153,7 +153,7 @@ object Command {
   /**
    * Write lines to a file.
    */
-  def writelines(filename: String, lines: List[String]) {
+  def writelines(filename: String, lines: Seq[String]) {
     val writer = new FileWriter(filename)
     for (line <- lines) {
       writer.write(line)
@@ -194,7 +194,7 @@ object Command {
   /**
    * Return subprocesses for a parent process.
    */
-  def get_child_processes(pid: Int): List[Int] = {
+  def get_child_processes(pid: Int): Seq[Int] = {
     shlines("ps -o pid= --ppid " + pid) map { pid => pid.toInt }
   }
 
@@ -224,11 +224,11 @@ object Command {
    * This method returns an empty list when splitting an empty string.
    * The normal String.split returns an array with an empty element.
    */
-  def split(string: String, separator: String, limit: Int = 0): List[String] = {
+  def split(string: String, separator: String, limit: Int = 0): Seq[String] = {
     if (string == "") {
-      List()
+      Seq()
     } else {
-      string.split(separator, limit).toList
+      string.split(separator, limit).toSeq
     }
   }
 }

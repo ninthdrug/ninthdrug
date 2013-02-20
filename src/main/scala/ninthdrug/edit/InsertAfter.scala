@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 Trung Dinh
+ * Copyright 2008-2013 Trung Dinh
  *
  *  This file is part of Ninthdrug.
  *
@@ -23,7 +23,7 @@ import scala.util.matching.Regex
 
 class InsertAfterString(pattern: String, insert: String) extends Edit {
 
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     val buf = ListBuffer[String]()
     for (line <- lines) {
       buf.append(line)
@@ -31,13 +31,13 @@ class InsertAfterString(pattern: String, insert: String) extends Edit {
         buf.append(insert)
       }
     }
-    buf.toList
+    buf.toSeq
   }
 }
 
 class InsertAfterRegex(pattern: Regex, insert: String) extends Edit {
 
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     val buf = ListBuffer[String]()
     for (line <- lines) {
       buf.append(line)
@@ -46,7 +46,7 @@ class InsertAfterRegex(pattern: Regex, insert: String) extends Edit {
         case None =>
       }
     }
-    buf.toList
+    buf.toSeq
   }
 }
 

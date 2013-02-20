@@ -21,13 +21,13 @@ package ninthdrug.edit
 import scala.util.matching.Regex
 
 class DeleteString(pattern: String) extends Edit {
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     lines.filter { line => line.contains(pattern) }
   }
 }
 
 class DeleteRegex(pattern: Regex) extends Edit {
-  override def edit(lines: List[String]): List[String] = {
+  override def edit(lines: Seq[String]): Seq[String] = {
     lines.filter { line =>
       pattern.findFirstIn(line) match {
         case Some(_) => true
