@@ -18,6 +18,10 @@
  */
 package ninthdrug.util
 
+import scala.language.implicitConversions
+import scala.language.postfixOps
+import scala.language.existentials
+
 object Reflect {
 
   def hasMethod(obj: AnyRef, name: String, params: java.lang.Class[_]*): Boolean = {

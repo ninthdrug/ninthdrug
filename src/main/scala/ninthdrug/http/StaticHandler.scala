@@ -69,7 +69,7 @@ class StaticHandler(val root: String) extends Handler {
     out.write(bytes, 0, bytes.length)
   }
 
-  private val forbiddenExts = List("class", "scala")
+  private val forbiddenExts = List("class", "scala", "taak")
 
   private def forbidden(path: String): Boolean =
     path.startsWith("/WEB-INF") || forbiddenExts.contains(getExt(path, '.'))

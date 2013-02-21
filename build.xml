@@ -14,20 +14,16 @@
     <mkdir dir="build/classes"/>
     <path id="build.classpath">
       <pathelement location="${scala.home}/lib/scala-library.jar"/>
-<!--
       <pathelement location="${scala.home}/lib/scala-actors.jar"/>
       <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
--->
       <pathelement location="lib/jsoup-1.7.1.jar"/>
       <pathelement location="lib/mail.jar"/>
       <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
     </path>
     <path id="test.classpath">
       <pathelement location="${scala.home}/lib/scala-library.jar"/>
-<!--
       <pathelement location="${scala.home}/lib/scala-actors.jar"/>
       <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
--->
       <pathelement location="lib/scalatest_2.9.0-1.8.jar"/>
       <pathelement location="lib/mail.jar"/>
       <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
@@ -47,9 +43,7 @@
       <classpath>
         <pathelement location="${scala.home}/lib/scala-library.jar"/>
         <pathelement location="${scala.home}/lib/scala-compiler.jar"/>
-<!--
         <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
--->
       </classpath>
     </taskdef>
   </target>
@@ -61,7 +55,7 @@
          scalacdebugging="yes"
          unchecked="yes"
          deprecation="yes"
-         addparams="">
+         addparams="-feature">
       <include name="**/*.scala" />
     </scalac>
   </target>
@@ -110,6 +104,7 @@
     <copy todir="${bin.dir}">
       <fileset dir="script/main">
         <include name="makeinstaller"/>
+        <include name="start_webserver"/>
         <exclude name="**/.svn"/>
       </fileset>
       <filterset refid="ninthdrugfilter"/>

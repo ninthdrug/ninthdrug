@@ -85,7 +85,7 @@ class DirectoryHandler(
       writer.write("<html>\n")
       writer.write("<head></head>\n")
       writer.write("<body>\n")
-      writer.write("401 Forbidden: ")
+      writer.write("403 Forbidden: ")
       writer.write(req.path + "\n")
       writer.write("</body>\n")
       writer.write("</html>\n")

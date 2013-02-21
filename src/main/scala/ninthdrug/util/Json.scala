@@ -18,6 +18,9 @@
  */
 package ninthdrug.util
 
+import scala.language.implicitConversions
+import scala.language.reflectiveCalls
+
 object Json {
   type JsonType = { def json(): String }
 

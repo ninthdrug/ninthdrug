@@ -19,6 +19,7 @@
 package ninthdrug.json
 
 import collection.immutable.ListMap
+import scala.language.implicitConversions
 
 /**
  * A JsonEncoder[T] encodes values of type T to a JasonValue.

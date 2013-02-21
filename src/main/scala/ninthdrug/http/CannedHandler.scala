@@ -23,14 +23,14 @@ import java.io._
 
 class CannedHandler extends Handler {
   val CannedHeaders = """|HTTP/1.1 200 OK
-                            |Date: Sat, 07 Mar 2009 12:20:25 GMT
-                            |Server: Scala Thingie
-                            |Accept-Ranges: bytes
-                            |Content-Length: 44
-                            |Connection: close
-                            |Content-Type: text/html
-                            |
-                            |""".stripMargin
+                         |Date: Sat, 07 Mar 2009 12:20:25 GMT
+                         |Server: Scala Thingie
+                         |Accept-Ranges: bytes
+                         |Content-Length: 44
+                         |Connection: close
+                         |Content-Type: text/html
+                         |
+                         |""".stripMargin
 
   val CannedResponse = CannedHeaders +
           "<html><body><h1>It works!</h1></body></html>"

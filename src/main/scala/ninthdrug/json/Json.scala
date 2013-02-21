@@ -18,6 +18,9 @@
  */
 package ninthdrug.json
 
+import scala.language.implicitConversions
+import scala.language.reflectiveCalls
+
 class Json[T](t: T) {
   def toJson(implicit encoder: JsonEncoder[T]): JsonValue = encoder.encode(t)
 }
