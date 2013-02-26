@@ -11,7 +11,7 @@ import ninthdrug.http._
 
 val server = new WebServer(
   ServerConfig(
-    @CACHEDIR@,
+    "@CACHEDIR@",
     List(
       SiteConfig("localhost", "", 8080, "", "/data/websites/localhost_8080"),
       SiteConfig("www.do_it.nl", "95.211.101.208", 9090, "", "/data/websites/www.it-do.nl")
