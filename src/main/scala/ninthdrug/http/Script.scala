@@ -27,7 +27,16 @@ trait Script {
   def execute(request: Request, response: Response, doc: Document): Any
 
   def getElementById(elem: Element, id: String): Element = {
-    elem.getElementById(id)
+    if (elem.getElementById(id) != null) {
+        return elem.getElementById(id) 
+    } else {
+        val elems = elem.getElementsByTag("body")
+        val body = elems.first() 
+        val child = body.appendElement("div")
+	child.attr("id",id)
+	child.attr("style","display:none")
+	return child.addClass("ninthdrug-log")
+    }
   }
 
   def setText(elem: Element, text: String) {
