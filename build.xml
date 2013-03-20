@@ -24,7 +24,7 @@
       <pathelement location="${scala.home}/lib/scala-library.jar"/>
       <pathelement location="${scala.home}/lib/scala-actors.jar"/>
       <pathelement location="${scala.home}/lib/scala-reflect.jar"/>
-      <pathelement location="lib/scalatest_2.9.0-1.8.jar"/>
+      <pathelement location="lib/scalatest_2.10-1.9.1.jar"/>
       <pathelement location="lib/mail.jar"/>
       <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
       <pathelement location="lib/jsoup-1.7.1.jar"/>
