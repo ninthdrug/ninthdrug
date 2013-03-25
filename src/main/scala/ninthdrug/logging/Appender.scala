@@ -33,6 +33,10 @@ class FileAppender(val filename: String) extends Appender {
     writer.flush
   }
 
+  def appendln(msg: String) {
+    append(msg + "\n")
+  }
+
   def flush() = writer.flush
 }
 
