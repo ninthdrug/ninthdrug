@@ -11,6 +11,7 @@
     <property name="lib.dir" location="${install.dir}/lib"/>
     <property name="log.dir" location="${install.dir}/log"/>
     <echo message="install.dir: ${install.dir}"/>
+    <echo message="scala.home: ${scala.home}"/>
     <mkdir dir="build/classes"/>
     <path id="build.classpath">
       <pathelement location="${scala.home}/lib/scala-library.jar"/>
